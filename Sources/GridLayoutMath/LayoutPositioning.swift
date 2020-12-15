@@ -56,10 +56,10 @@ extension LayoutPositioning {
         let growingTracks: [GridTrack]
         let growingBoundingSize: CGFloat
         if task.contentMode == .scroll {
-            growingTracks = [GridTrack](repeating: .fit, count: arrangement[keyPath: flow.arrangementCount(.growing)])
+            growingTracks = [GridTrack](repeating: .fit(Constants.defaultItemsAlignment), count: arrangement[keyPath: flow.arrangementCount(.growing)])
             growingBoundingSize = .infinity
         } else {
-            growingTracks = [GridTrack](repeating: .fr(1), count: arrangement[keyPath: flow.arrangementCount(.growing)])
+            growingTracks = [GridTrack](repeating: .fr(1,Constants.defaultItemsAlignment), count: arrangement[keyPath: flow.arrangementCount(.growing)])
             growingBoundingSize = boundingSize[keyPath: flow.size(.growing)]
         }
         
@@ -87,7 +87,7 @@ extension LayoutPositioning {
                 switch track {
                 case .fr:
                     return PositionedTrack(track: track, baseSize: 0)
-                case .pt(let size):
+                case .pt(let size, _):
                     return PositionedTrack(track: track, baseSize: CGFloat(size))
                 case .fit:
                     return PositionedTrack(track: track, baseSize: 0)
@@ -231,7 +231,7 @@ extension LayoutPositioning {
         /// 3. Expand Flexible Tracks
         let totalConstsSize = growingTracksSizes.map(\.baseSize).reduce(0, +)
         let fractionsCount: CGFloat = growingTracksSizes.reduce(0) { result, positionedTrack in
-            if case .fr(let fraction) = positionedTrack.track {
+            if case .fr(let fraction, _) = positionedTrack.track {
                 return result + fraction
             }
             return result
@@ -241,7 +241,7 @@ extension LayoutPositioning {
         let fractionValue = max(0, freeSpace / fractionsCount)
         
         for (trackIndex, positionedTrack) in growingTracksSizes.enumerated() {
-            if case .fr(let fraction) = positionedTrack.track {
+            if case .fr(let fraction, _) = positionedTrack.track {
                 let baseSize = growingTracksSizes[trackIndex].baseSize
                 growingTracksSizes[trackIndex].baseSize = max(fraction * fractionValue, baseSize)
             }

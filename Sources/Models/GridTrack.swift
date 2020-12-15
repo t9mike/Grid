@@ -7,6 +7,7 @@
 //
 
 import CoreGraphics
+import SwiftUI
 
 // swiftlint:disable identifier_name
 
@@ -14,10 +15,10 @@ import CoreGraphics
 /// fr(N) sizes a track proportionally to the bounding rect with the respect of specified fraction N as a part of total fractions count.
 /// const(N) sizes a track to be equal to the specified size N.
 public enum GridTrack {
-    case fr(CGFloat)
-    case pt(CGFloat)
-    case fit
-    
+    case fr(CGFloat,Alignment)
+    case pt(CGFloat,Alignment)
+    case fit(Alignment)
+        
     var isIntrinsic: Bool {
         switch self {
         case .fr:
@@ -44,7 +45,7 @@ public enum GridTrack {
 extension Array: ExpressibleByIntegerLiteral where Element == GridTrack {
     public typealias IntegerLiteralType = Int
     public init(integerLiteral value: Self.IntegerLiteralType) {
-        self = .init(repeating: .fr(Constants.defaultFractionSize), count: value)
+        self = .init(repeating: .fr(Constants.defaultFractionSize, Constants.defaultItemsAlignment), count: value)
     }
 }
 

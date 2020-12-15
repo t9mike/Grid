@@ -87,7 +87,7 @@ public struct Grid: View, LayoutArranging, LayoutPositioning {
                         .frame(flow: self.flow,
                                size: self.positions[item]?.bounds.size,
                                contentMode: self.contentMode,
-                               alignment: itemsAlignment)
+                               alignment: XXX)
                         .alignmentGuide(.leading, computeValue: { _ in self.leadingGuide(item: item) })
                         .alignmentGuide(.top, computeValue: { _ in self.topGuide(item: item) })
                         .backgroundPreferenceValue(GridBackgroundPreferenceKey.self) { preference in
