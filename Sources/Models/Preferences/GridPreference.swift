@@ -31,7 +31,7 @@ struct GridPreference: Equatable {
     static let `default` = GridPreference(itemsInfo: [])
 }
 
-struct GridPreferenceKey: PreferenceKey {
+struct GridPreferenceKey1: PreferenceKey {
     static var defaultValue = GridPreference.default
 
     static func reduce(value: inout GridPreference, nextValue: () -> GridPreference) {
@@ -39,6 +39,25 @@ struct GridPreferenceKey: PreferenceKey {
                                environment: nextValue().environment ?? value.environment)
     }
 }
+
+struct GridPreferenceKey2: PreferenceKey {
+    static var defaultValue = GridPreference.default
+
+    static func reduce(value: inout GridPreference, nextValue: () -> GridPreference) {
+        value = GridPreference(itemsInfo: value.itemsInfo + nextValue().itemsInfo,
+                               environment: nextValue().environment ?? value.environment)
+    }
+}
+
+struct GridPreferenceKey3: PreferenceKey {
+    static var defaultValue = GridPreference.default
+
+    static func reduce(value: inout GridPreference, nextValue: () -> GridPreference) {
+        value = GridPreference(itemsInfo: value.itemsInfo + nextValue().itemsInfo,
+                               environment: nextValue().environment ?? value.environment)
+    }
+}
+
 
 extension Array where Element == GridPreference.ItemInfo {
     var mergedToSingleValue: Self {

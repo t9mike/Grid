@@ -31,6 +31,7 @@ public struct Grid: View, LayoutArranging, LayoutPositioning {
     var internalContentMode: GridContentMode?
     var internalCacheMode: GridCacheMode?
     var internalItemsAlignment: GridAlignment?
+    var gridID: GridID
 
     private var flow: GridFlow {
         self.internalFlow ?? self.environmentFlow ?? Constants.defaultFlow
@@ -75,45 +76,132 @@ public struct Grid: View, LayoutArranging, LayoutPositioning {
     #endif
 
     public var body: some View {
-        return GeometryReader { mainGeometry in
-            ZStack(alignment: .topLeading) {
-                ForEach(self.items) { item in
-                    item.view
-                        .padding(spacing: self.spacing)
-                        .background(self.positionsPreferencesSetter(item: item,
-                                                                    boundingSize: mainGeometry.size))
-                        .transformPreference(GridPreferenceKey.self) { preference in
-                            preference.itemsInfo = preference.itemsInfo.mergedToSingleValue
-                        }
-                        .frame(flow: self.flow,
-                               size: self.positions[item]?.bounds.size,
-                               contentMode: self.contentMode,
-                               alignment: self.alignments[item] ?? itemsAlignment)
-                        .alignmentGuide(.leading, computeValue: { _ in self.leadingGuide(item: item) })
-                        .alignmentGuide(.top, computeValue: { _ in self.topGuide(item: item) })
-                        .backgroundPreferenceValue(GridBackgroundPreferenceKey.self) { preference in
-                            self.cellPreferenceView(item: item, preference: preference)
-                        }
-                        .overlayPreferenceValue(GridOverlayPreferenceKey.self) { preference in
-                            self.cellPreferenceView(item: item, preference: preference)
-                        }
+        
+        switch gridID {
+        case .Num1:
+            return AnyView(GeometryReader { mainGeometry in
+                ZStack(alignment: .topLeading) {
+                    ForEach(self.items) { item in
+                        item.view
+                            .padding(spacing: self.spacing)
+                            .background(self.positionsPreferencesSetter(item: item,
+                                                                        boundingSize: mainGeometry.size))
+                            .transformPreference(GridPreferenceKey1.self) { preference in
+                                    preference.itemsInfo = preference.itemsInfo.mergedToSingleValue
+                                }
+                            .frame(flow: self.flow,
+                                   size: self.positions[item]?.bounds.size,
+                                   contentMode: self.contentMode,
+                                   alignment: self.alignments[item] ?? itemsAlignment)
+                            .alignmentGuide(.leading, computeValue: { _ in self.leadingGuide(item: item) })
+                            .alignmentGuide(.top, computeValue: { _ in self.topGuide(item: item) })
+                            .backgroundPreferenceValue(GridBackgroundPreferenceKey.self) { preference in
+                                self.cellPreferenceView(item: item, preference: preference)
+                            }
+                            .overlayPreferenceValue(GridOverlayPreferenceKey.self) { preference in
+                                self.cellPreferenceView(item: item, preference: preference)
+                            }
+                    }
+                }
+                .animation(self.gridAnimation)
+                .frame(flow: self.flow,
+                       size: mainGeometry.size,
+                       contentMode: self.contentMode,
+                       alignment: .center)
+                .if(contentMode == .scroll) { content in
+                    ScrollView(self.scrollAxis) { content }
+                }
+                .onPreferenceChange(GridPreferenceKey1.self) { preference in
+                    self.calculateLayout(preference: preference,
+                                         boundingSize: mainGeometry.size)
+                    self.saveAlignmentsFrom(preference: preference)
                 }
             }
-            .animation(self.gridAnimation)
-            .frame(flow: self.flow,
-                   size: mainGeometry.size,
-                   contentMode: self.contentMode,
-                   alignment: .center)
-            .if(contentMode == .scroll) { content in
-                ScrollView(self.scrollAxis) { content }
+            .id(self.isLoaded))
+
+        case .Num2:
+            return AnyView(GeometryReader { mainGeometry in
+                ZStack(alignment: .topLeading) {
+                    ForEach(self.items) { item in
+                        item.view
+                            .padding(spacing: self.spacing)
+                            .background(self.positionsPreferencesSetter(item: item,
+                                                                        boundingSize: mainGeometry.size))
+                            .transformPreference(GridPreferenceKey2.self) { preference in
+                                    preference.itemsInfo = preference.itemsInfo.mergedToSingleValue
+                                }
+                            .frame(flow: self.flow,
+                                   size: self.positions[item]?.bounds.size,
+                                   contentMode: self.contentMode,
+                                   alignment: self.alignments[item] ?? itemsAlignment)
+                            .alignmentGuide(.leading, computeValue: { _ in self.leadingGuide(item: item) })
+                            .alignmentGuide(.top, computeValue: { _ in self.topGuide(item: item) })
+                            .backgroundPreferenceValue(GridBackgroundPreferenceKey.self) { preference in
+                                self.cellPreferenceView(item: item, preference: preference)
+                            }
+                            .overlayPreferenceValue(GridOverlayPreferenceKey.self) { preference in
+                                self.cellPreferenceView(item: item, preference: preference)
+                            }
+                    }
+                }
+                .animation(self.gridAnimation)
+                .frame(flow: self.flow,
+                       size: mainGeometry.size,
+                       contentMode: self.contentMode,
+                       alignment: .center)
+                .if(contentMode == .scroll) { content in
+                    ScrollView(self.scrollAxis) { content }
+                }
+                .onPreferenceChange(GridPreferenceKey2.self) { preference in
+                    self.calculateLayout(preference: preference,
+                                         boundingSize: mainGeometry.size)
+                    self.saveAlignmentsFrom(preference: preference)
+                }
             }
-            .onPreferenceChange(GridPreferenceKey.self) { preference in
-                self.calculateLayout(preference: preference,
-                                     boundingSize: mainGeometry.size)
-                self.saveAlignmentsFrom(preference: preference)
+            .id(self.isLoaded))
+
+        case .Num3:
+            return AnyView(GeometryReader { mainGeometry in
+                ZStack(alignment: .topLeading) {
+                    ForEach(self.items) { item in
+                        item.view
+                            .padding(spacing: self.spacing)
+                            .background(self.positionsPreferencesSetter(item: item,
+                                                                        boundingSize: mainGeometry.size))
+                            .transformPreference(GridPreferenceKey3.self) { preference in
+                                    preference.itemsInfo = preference.itemsInfo.mergedToSingleValue
+                                }
+                            .frame(flow: self.flow,
+                                   size: self.positions[item]?.bounds.size,
+                                   contentMode: self.contentMode,
+                                   alignment: self.alignments[item] ?? itemsAlignment)
+                            .alignmentGuide(.leading, computeValue: { _ in self.leadingGuide(item: item) })
+                            .alignmentGuide(.top, computeValue: { _ in self.topGuide(item: item) })
+                            .backgroundPreferenceValue(GridBackgroundPreferenceKey.self) { preference in
+                                self.cellPreferenceView(item: item, preference: preference)
+                            }
+                            .overlayPreferenceValue(GridOverlayPreferenceKey.self) { preference in
+                                self.cellPreferenceView(item: item, preference: preference)
+                            }
+                    }
+                }
+                .animation(self.gridAnimation)
+                .frame(flow: self.flow,
+                       size: mainGeometry.size,
+                       contentMode: self.contentMode,
+                       alignment: .center)
+                .if(contentMode == .scroll) { content in
+                    ScrollView(self.scrollAxis) { content }
+                }
+                .onPreferenceChange(GridPreferenceKey3.self) { preference in
+                    self.calculateLayout(preference: preference,
+                                         boundingSize: mainGeometry.size)
+                    self.saveAlignmentsFrom(preference: preference)
+                }
             }
+            .id(self.isLoaded))
         }
-        .id(self.isLoaded)
+
     }
     
     private func calculateLayout(preference: GridPreference, boundingSize: CGSize) {
@@ -200,20 +288,52 @@ public struct Grid: View, LayoutArranging, LayoutPositioning {
     }
     
     private func positionsPreferencesSetter(item: GridElement, boundingSize: CGSize) -> some View {
-        GeometryReader { geometry in
-            Color.clear
-                .transformPreference(GridPreferenceKey.self, { preference in
-                    let positionedItem = PositionedItem(bounds: CGRect(origin: .zero, size: geometry.size),
-                                                        gridElement: item)
-                    let info = GridPreference.ItemInfo(positionedItem: positionedItem)
-                    let environment = GridPreference.Environment(tracks: self.trackSizes,
-                                                                 contentMode: self.contentMode,
-                                                                 flow: self.flow,
-                                                                 packing: self.packing,
-                                                                 boundingSize: boundingSize)
-                    preference = GridPreference(itemsInfo: [info], environment: environment)
-                })
+        
+        switch gridID {
+        case .Num1:
+            return AnyView(GeometryReader { geometry in
+                Color.clear
+            .transformPreference(GridPreferenceKey1.self, { preference in
+                let positionedItem = PositionedItem(bounds: CGRect(origin: .zero, size: geometry.size),
+                                                    gridElement: item)
+                let info = GridPreference.ItemInfo(positionedItem: positionedItem)
+                let environment = GridPreference.Environment(tracks: self.trackSizes,
+                                                             contentMode: self.contentMode,
+                                                             flow: self.flow,
+                                                             packing: self.packing,
+                                                             boundingSize: boundingSize)
+                preference = GridPreference(itemsInfo: [info], environment: environment)
+            })})
+        case .Num2:
+            return AnyView(GeometryReader { geometry in
+                Color.clear
+            .transformPreference(GridPreferenceKey2.self, { preference in
+                let positionedItem = PositionedItem(bounds: CGRect(origin: .zero, size: geometry.size),
+                                                    gridElement: item)
+                let info = GridPreference.ItemInfo(positionedItem: positionedItem)
+                let environment = GridPreference.Environment(tracks: self.trackSizes,
+                                                             contentMode: self.contentMode,
+                                                             flow: self.flow,
+                                                             packing: self.packing,
+                                                             boundingSize: boundingSize)
+                preference = GridPreference(itemsInfo: [info], environment: environment)
+            })})
+        case .Num3:
+            return AnyView(GeometryReader { geometry in
+                Color.clear
+            .transformPreference(GridPreferenceKey3.self, { preference in
+                let positionedItem = PositionedItem(bounds: CGRect(origin: .zero, size: geometry.size),
+                                                    gridElement: item)
+                let info = GridPreference.ItemInfo(positionedItem: positionedItem)
+                let environment = GridPreference.Environment(tracks: self.trackSizes,
+                                                             contentMode: self.contentMode,
+                                                             flow: self.flow,
+                                                             packing: self.packing,
+                                                             boundingSize: boundingSize)
+                preference = GridPreference(itemsInfo: [info], environment: environment)
+            })})
         }
+
     }
 }
 
