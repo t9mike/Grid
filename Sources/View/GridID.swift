@@ -11,4 +11,5 @@ public enum GridID {
     case Num1
     case Num2
     case Num3
+    case Num4
 }

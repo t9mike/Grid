@@ -32,6 +32,12 @@ extension View {
                 info.span = GridSpan(column: max(column, 1), row: max(row, 1))
                 preferences.itemsInfo = [info]
             }))
+        case .Num4:
+            return AnyView(transformPreference(GridPreferenceKey4.self, { preferences in
+                var info = preferences.itemsInfo.first ?? .empty
+                info.span = GridSpan(column: max(column, 1), row: max(row, 1))
+                preferences.itemsInfo = [info]
+            }))
         }
     }
     
@@ -55,6 +61,12 @@ extension View {
                 info.span = GridSpan(column: max(span.column, 1), row: max(span.row, 1))
                 preferences.itemsInfo = [info]
             }))
+        case .Num4:
+            return AnyView(transformPreference(GridPreferenceKey4.self, { preferences in
+                var info = preferences.itemsInfo.first ?? .empty
+                info.span = GridSpan(column: max(span.column, 1), row: max(span.row, 1))
+                preferences.itemsInfo = [info]
+            }))
         }
     }
     
@@ -74,6 +86,12 @@ extension View {
             }))
         case .Num3:
             return AnyView(transformPreference(GridPreferenceKey3.self, { preferences in
+                var info = preferences.itemsInfo.first ?? .empty
+                info.start = GridStart(column: column.nilIfBelowZero, row: row.nilIfBelowZero)
+                preferences.itemsInfo = [info]
+            }))
+        case .Num4:
+            return AnyView(transformPreference(GridPreferenceKey4.self, { preferences in
                 var info = preferences.itemsInfo.first ?? .empty
                 info.start = GridStart(column: column.nilIfBelowZero, row: row.nilIfBelowZero)
                 preferences.itemsInfo = [info]
@@ -102,6 +120,12 @@ extension View {
                 info.start = GridStart(column: start.column.nilIfBelowZero, row: start.row.nilIfBelowZero)
                 preferences.itemsInfo = [info]
             }))
+        case .Num4:
+            return AnyView(transformPreference(GridPreferenceKey4.self, { preferences in
+                var info = preferences.itemsInfo.first ?? .empty
+                info.start = GridStart(column: start.column.nilIfBelowZero, row: start.row.nilIfBelowZero)
+                preferences.itemsInfo = [info]
+            }))
         }
         
     }
@@ -113,22 +137,25 @@ extension View {
                 var info = preferences.itemsInfo.first ?? .empty
                 info.alignment = alignment
                 preferences.itemsInfo = [info]
-            })
-)
+            }))
         case .Num2:
             return AnyView(transformPreference(GridPreferenceKey2.self, { preferences in
                 var info = preferences.itemsInfo.first ?? .empty
                 info.alignment = alignment
                 preferences.itemsInfo = [info]
-            })
-)
+            }))
         case .Num3:
             return AnyView(transformPreference(GridPreferenceKey3.self, { preferences in
                 var info = preferences.itemsInfo.first ?? .empty
                 info.alignment = alignment
                 preferences.itemsInfo = [info]
-            })
-)
+            }))
+        case .Num4:
+            return AnyView(transformPreference(GridPreferenceKey4.self, { preferences in
+                var info = preferences.itemsInfo.first ?? .empty
+                info.alignment = alignment
+                preferences.itemsInfo = [info]
+            }))
         }
     }
     
