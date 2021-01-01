@@ -6,9 +6,13 @@
 //  Copyright © 2020 Exyte. All rights reserved.
 //
 
-#if os(iOS) || os(watchOS) || os(tvOS)
-
+#if os(iOS) || os(tvOS)
 import UIKit.UIApplication
+#endif
+
+#if os(watchOS)
+import Foundation
+#endif
 
 private class ObjectWrapper {
     let value: Any
@@ -40,12 +44,15 @@ class Cache<KeyType: Hashable, ObjectType> {
     private let cache: NSCache<KeyWrapper<KeyType>, ObjectWrapper> = NSCache()
 
     init(lowMemoryAware: Bool = true) {
+        // TODO: implement for watchOS
+        #if !os(watchOS)
         guard lowMemoryAware else { return }
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(onLowMemory),
             name: UIApplication.didReceiveMemoryWarningNotification,
             object: nil)
+        #endif
     }
 
     @objc private func onLowMemory() {
@@ -97,5 +104,3 @@ class Cache<KeyType: Hashable, ObjectType> {
         set { cache.evictsObjectsWithDiscardedContent = newValue }
     }
 }
-
-#endif
