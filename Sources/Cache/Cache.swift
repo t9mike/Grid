@@ -6,12 +6,10 @@
 //  Copyright © 2020 Exyte. All rights reserved.
 //
 
+import Foundation
+
 #if os(iOS) || os(tvOS)
 import UIKit.UIApplication
-#endif
-
-#if os(watchOS)
-import Foundation
 #endif
 
 private class ObjectWrapper {
@@ -44,8 +42,11 @@ class Cache<KeyType: Hashable, ObjectType> {
     private let cache: NSCache<KeyWrapper<KeyType>, ObjectWrapper> = NSCache()
 
     init(lowMemoryAware: Bool = true) {
-        // TODO: implement for watchOS
-        #if !os(watchOS)
+        // UIApplication memory-warning notifications exist only on iOS and
+        // tvOS. NSCache remains fully usable on macOS and watchOS, but those
+        // platforms must not compile a reference to UIApplication. NSCache can
+        // still evict objects automatically under system memory pressure.
+        #if os(iOS) || os(tvOS)
         guard lowMemoryAware else { return }
         NotificationCenter.default.addObserver(
             self,
