@@ -12,17 +12,19 @@ import SwiftUI
 
 extension Grid {
     public init(tracks: [GridTrack] = 1, contentMode: GridContentMode? = nil, flow: GridFlow? = nil, packing: GridPacking? = nil, spacing: GridSpacing = Constants.defaultSpacing, itemsAlignment: GridAlignment? = nil, cache: GridCacheMode? = nil, gridID: GridID = .Num1, @GridBuilder content: () -> ConstructionItem) {
-        self.trackSizes = tracks
-        self.spacing = spacing
-        self.internalContentMode = contentMode
-        self.internalFlow = flow
-        self.internalPacking = packing
-        self.internalCacheMode = cache
-        self.internalItemsAlignment = itemsAlignment
-        self.gridID = gridID
-
         let content = content()
         var index = 0
-        self.items = content.contentViews.asGridElements(index: &index)
+        let items = content.contentViews.asGridElements(index: &index)
+        self.init(
+            items: items,
+            trackSizes: tracks,
+            spacing: spacing,
+            internalContentMode: contentMode,
+            internalFlow: flow,
+            internalPacking: packing,
+            internalCacheMode: cache,
+            internalItemsAlignment: itemsAlignment,
+            gridID: gridID
+        )
     }
 }

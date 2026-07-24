@@ -9,12 +9,12 @@
 import SwiftUI
 
 public struct Grid: View, LayoutArranging, LayoutPositioning {
-    @State private var positions: PositionedLayout = .empty
-    @State private var isLoaded: Bool = false
-    @State private var alignments: [GridElement: GridAlignment] = [:]
+    @State var positions: PositionedLayout
+    @State var isLoaded: Bool
+    @State var alignments: [GridElement: GridAlignment]
     #if os(iOS) || os(watchOS) || os(tvOS)
-    @State private var internalLayoutCache = Cache<ArrangingTask, LayoutArrangement>()
-    @State private var internalPositionsCache = Cache<PositioningTask, PositionedLayout>()
+    @State var internalLayoutCache: Cache<ArrangingTask, LayoutArrangement>
+    @State var internalPositionsCache: Cache<PositioningTask, PositionedLayout>
     #endif
     @Environment(\.gridContentMode) private var environmentContentMode
     @Environment(\.gridFlow) private var environmentFlow
@@ -32,6 +32,36 @@ public struct Grid: View, LayoutArranging, LayoutPositioning {
     var internalCacheMode: GridCacheMode?
     var internalItemsAlignment: GridAlignment?
     var gridID: GridID
+
+    init(
+        items: [GridElement],
+        trackSizes: [GridTrack],
+        spacing: GridSpacing,
+        internalContentMode: GridContentMode?,
+        internalFlow: GridFlow?,
+        internalPacking: GridPacking?,
+        internalCacheMode: GridCacheMode?,
+        internalItemsAlignment: GridAlignment?,
+        gridID: GridID
+    ) {
+        self._positions = State(initialValue: .empty)
+        self._isLoaded = State(initialValue: false)
+        self._alignments = State(initialValue: [:])
+        #if os(iOS) || os(watchOS) || os(tvOS)
+        self._internalLayoutCache = State(initialValue: Cache<ArrangingTask, LayoutArrangement>())
+        self._internalPositionsCache = State(initialValue: Cache<PositioningTask, PositionedLayout>())
+        #endif
+
+        self.items = items
+        self.trackSizes = trackSizes
+        self.spacing = spacing
+        self.internalContentMode = internalContentMode
+        self.internalFlow = internalFlow
+        self.internalPacking = internalPacking
+        self.internalCacheMode = internalCacheMode
+        self.internalItemsAlignment = internalItemsAlignment
+        self.gridID = gridID
+    }
 
     private var flow: GridFlow {
         self.internalFlow ?? self.environmentFlow ?? Constants.defaultFlow
